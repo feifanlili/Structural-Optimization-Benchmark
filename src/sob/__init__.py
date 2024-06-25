@@ -1,4 +1,4 @@
-import problems 
+from .problems import *
 
 def get_problem(model_type, dimension, output_data, batch_file_path):
     '''
@@ -45,13 +45,13 @@ def get_problem(model_type, dimension, output_data, batch_file_path):
         Path to the OpenRadioss batch file.
     '''
     if model_type==1:
-        problem_instance = problems.StarBox(dimension, output_data, batch_file_path)
+        problem_instance = StarBox(dimension, output_data, batch_file_path)
         return problem_instance
     elif model_type==2:
-        problem_instance = problems.ThreePointBending(dimension, output_data, batch_file_path)
+        problem_instance = ThreePointBending(dimension, output_data, batch_file_path)
         return problem_instance
     elif model_type==3:
-        problem_instance = problems.CrashTube(dimension, output_data, batch_file_path)
+        problem_instance = CrashTube(dimension, output_data, batch_file_path)
         return problem_instance
     else:
         raise ValueError('Invalid model type')

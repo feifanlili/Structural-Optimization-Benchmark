@@ -21,6 +21,9 @@ class OptiProblem():
         self.input_file_name = None # input deck name
         self.output_file_name = None # output result name
 
+        self.mesh = None
+        self.fem = None
+
         self.search_space = (-5.0, 5.0)
 
     def _validate_variable_array(self, variable_array):
@@ -119,9 +122,9 @@ class StarBox(OptiProblem):
         StarBox.instance_counter+=1
 
     def _write_input_file(self, fem_space_variable_array):
-        mesh = StarBoxMesh(fem_space_variable_array) 
-        model = StarBoxModel(mesh)
-        model.write_input_files()
+        self.mesh = StarBoxMesh(fem_space_variable_array) 
+        self.model = StarBoxModel(self.mesh)
+        self.model.write_input_files()
     
 
 class ThreePointBending(OptiProblem):

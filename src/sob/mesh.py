@@ -33,6 +33,14 @@ class StarBoxMesh():
         self._set_parameters(**kwargs)
         self._generate_database_and_grid(crossing_wall)
 
+    def volume(self):
+        # Calculate the distance between consecutive vertices
+        distances = np.linalg.norm(np.diff(self.grid_pts, axis=0, append=[self.grid_pts[0]]), axis=1)
+        # Sum the distances to get the perimeter
+        perimeter = np.sum(distances)
+        result = perimeter*self.extrusion_length*self.thickness
+        return result
+
     def _determine_grid_points(self):
         """
         Determine the coordinates of the grid points to define the shape of the star box.

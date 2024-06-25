@@ -72,6 +72,8 @@ class StarBoxModel():
         self.write_nod_force_top = False
         self.write_nod_force_bottom = True
 
+    def mass(self):
+        return self.mesh.volume()*self.mat_density
     
     def _load_impactor(self, **kwargs):
         for key, value in kwargs.items():

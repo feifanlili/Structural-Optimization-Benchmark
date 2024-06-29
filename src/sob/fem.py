@@ -75,6 +75,10 @@ class StarBoxModel():
     def mass(self):
         return self.mesh.volume()*self.mat_density
     
+    def absorbed_energy(self):
+        # initial kinetic energy
+        return self.wall_mass*self.wall_vel**2/2
+    
     def _load_impactor(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)

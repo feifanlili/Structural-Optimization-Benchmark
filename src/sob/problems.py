@@ -81,6 +81,8 @@ class OptiProblem():
         os.chdir(working_dir)
         self._write_input_file(fem_space_variable_array)
         os.chdir(original_dir)
+
+        self.problem_id += 1 # update the problem id for the input deck generation
         
 
     def _write_input_file(self, fem_space_variable_array):
@@ -89,21 +91,27 @@ class OptiProblem():
     def run_simulation(self):
         if self.input_file_name is None:
             raise ValueError("input_file_name must be provided or defined in the subclass.")
-
+        # make problem id back to original, since it has been updated when generate_input_deck has been called
+        self.problem_id -= 1
         dir_name = f'{self.__class__.__name__.lower()}_deck{self.problem_id}'
         working_dir = os.path.join(os.getcwd(), dir_name)
         input_file_path = os.path.join(working_dir, self.input_file_name)
         run_radioss(input_file_path, self.batch_file_path)
+        # update problem id again
+        self.problem_id += 1
 
     def __call__(self, variable_array):
         self.generate_input_deck(variable_array)
         if self.output_data == 'mass':
             result = self.model.mass()
+        elif self.output_data == 'absorbed_energy':
+            result = self.model.absorbed_energy()
+        elif self.output_data == 'intrusion':
+            self.run_simulation()
         else:
             result = None
-        self.problem_id += 1
-        return result
         
+        return result        
 
 
 class StarBox(OptiProblem):
@@ -172,4 +180,3 @@ class CrashTube(OptiProblem):
         self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'combine.k'
         self.output_file_name = 'combineT01.csv'
-

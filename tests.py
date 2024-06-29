@@ -31,3 +31,9 @@ def check_multi_input():
     a = sob.get_problem(1,3,'mass',batch_file_path)
     print(a([1,2,3]))
     print(a([1,2,5]))
+
+def check_absorbed_energy():
+    # result should be the same, since the design variables don't influence the mass and velocity of the wall
+    a = sob.get_problem(1,3,'absorbed_energy',batch_file_path)
+    print(a([1,2,3]))
+    print(a([1,2,5]))

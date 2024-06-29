@@ -283,3 +283,11 @@ class CrashTubeMesh():
         width = 80 / 2
         self.grid_pts = np.array([[-length, width], [length, width],
                                     [length, -width], [-length, -width]])
+        
+    def volume(self):
+        # Calculate the distance between consecutive vertices
+        distances = np.linalg.norm(np.diff(self.grid_pts, axis=0, append=[self.grid_pts[0]]), axis=1)
+        # Sum the distances to get the perimeter
+        perimeter = np.sum(distances)
+        result = perimeter*self.extrusion_length*self.thickness
+        return result

@@ -15,14 +15,16 @@ class OptiProblem():
         self.output_data = output_data
         self.batch_file_path = batch_file_path
 
-        # the attributes need to be overwritten in teh subclass
+        # The attributes need to be overwritten in teh subclass
         self.problem_id = None
         self.variable_ranges = None # constraints of the problem
         self.input_file_name = None # input deck name
         self.output_file_name = None # output result name
 
+        # The attributes will be loaded if the function _write_input_file has been called. 
+        # Used for mass calculation.
         self.mesh = None
-        self.fem = None
+        self.model = None
 
         self.search_space = (-5.0, 5.0)
 
@@ -94,7 +96,13 @@ class OptiProblem():
         run_radioss(input_file_path, self.batch_file_path)
 
     def __call__(self, variable_array):
-        pass
+        self.generate_input_deck(variable_array)
+        if self.output_data == 'mass':
+            result = self.model.mass()
+        else:
+            result = None
+        self.problem_id += 1
+        return result
         
 
 
@@ -135,14 +143,14 @@ class ThreePointBending(OptiProblem):
         # 3 -> the first, middle, and last shell thickness vary. 
         # 4 -> expect for middle shell, the other 4 shell thickness vary.
         # 5 -> all three shell thickness vary.
-        variable_ranges = {
+        variable_ranges_map = {
             1: [(0.5, 3)],
             2: [(0.5, 3)]*2,
             3: [(0.5, 3)]*3,
             4: [(0.5, 3)]*4,
             5: [(0.5, 3)]*5
         }
-        self.variable_range = variable_ranges[self.dimension]
+        self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'ThreePointBending_0000.rad'
         self.output_file_name = 'ThreePointBendingT01.csv'
 
@@ -154,14 +162,14 @@ class CrashTube(OptiProblem):
         # 4 -> except for middle trigger position and depth, other 4 vary ().
         # 5 -> except for middle trigger depth, other 5 vary. 
         # 6 -> all three positions and depths vary.
-        variable_ranges = {
+        variable_ranges_map = {
             2: [(-10, 10), (-4, 4)],
             3: [(-4, 4)]*3,
             4: [(-10, 10), (-4, 4), (-10, 10), (-4, 4)],
             5: [(-4, 4), (-4, 4), (-4, 4), (-10, 10), (-10, 10)],
             6: [(-4, 4), (-4, 4), (-4, 4), (-10, 10), (-10, 10), (-10, 10)]
         }
-        self.variable_range = variable_ranges[self.dimension]
+        self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'combine.k'
         self.output_file_name = 'combineT01.csv'
 

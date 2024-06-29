@@ -28,6 +28,7 @@ def check_mass():
     print(c.model.mass())
 
 def check_multi_input():
+    # the second result should be larger than the first one, because the thickness (the third variable) is larger
     a = sob.get_problem(1,3,'mass',batch_file_path)
     print(a([1,2,3]))
     print(a([1,2,5]))
@@ -37,3 +38,15 @@ def check_absorbed_energy():
     a = sob.get_problem(1,3,'absorbed_energy',batch_file_path)
     print(a([1,2,3]))
     print(a([1,2,5]))
+
+def check_intrusion():
+    # intrusion 2 should be smaller than intrusion 1, since the second model has larger thickness 
+    # Result: 
+    # Intrusion1: 49.340218 
+    # Intrusion2: 31.747295
+    a = sob.get_problem(1,3,'intrusion',batch_file_path)
+    intrusion1 = a([1,2,3])
+    intrusion2 = a([1,2,5])
+    print("Intrusion 1:"+str(intrusion1))
+    print("Intrusion 2:"+str(intrusion2))
+

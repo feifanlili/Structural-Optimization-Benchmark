@@ -1,11 +1,18 @@
 import os
+import pandas as pd
 from .solver import run_radioss
 from .mesh import StarBoxMesh
 from .fem import StarBoxModel
 
+'''
+Remark: following phases are important 
+
+1.  
+'''
+
 class OptiProblem():
     '''
-    The abstract of the structural optimization problem, with three subclass (three problem type)
+    The abstract of the structural optimization problem, with three subclass (three problem types)
     The instance is initialized by problem dimension, output data type, and the batch file path of the solver OpenRadioss. 
     The core idea is to generate a specific type of instance, input the variable array then output the evaluation of the desired data type like mass, intrusion, etc.
     The input variables should be in an universal search space, default (-5,5). For the evaluation those variables will be mapped to the real FEM problem space.
@@ -26,6 +33,10 @@ class OptiProblem():
         self.mesh = None
         self.model = None
 
+        # The attributes will be loaded if the function run_simulation has been called.
+        self.output_data_frame = None
+        
+        # Universal design variable search space
         self.search_space = (-5.0, 5.0)
 
     def _validate_variable_array(self, variable_array):
@@ -97,6 +108,10 @@ class OptiProblem():
         working_dir = os.path.join(os.getcwd(), dir_name)
         input_file_path = os.path.join(working_dir, self.input_file_name)
         run_radioss(input_file_path, self.batch_file_path)
+        # load simulation result dataframe and make it cleaner
+        output_file_path = os.path.join(working_dir, self.output_file_name)
+        self.output_data_frame = pd.read_csv(output_file_path)
+        self.output_data_frame.columns = self.output_data_frame.columns.str.replace(' ', '')
         # update problem id again
         self.problem_id += 1
 
@@ -108,6 +123,8 @@ class OptiProblem():
             result = self.model.absorbed_energy()
         elif self.output_data == 'intrusion':
             self.run_simulation()
+            max_z = max(self.output_data_frame[self.z_displacement_key], key=abs)
+            return abs(max_z)
         else:
             result = None
         
@@ -133,6 +150,7 @@ class StarBox(OptiProblem):
         self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'combine.k'
         self.output_file_name = 'combineT01.csv'
+        self.z_displacement_key = 'DATABASE_HISTORY_NODE1001var63' # the key of the intrusion in the output csv file
 
         self.problem_id = StarBox.instance_counter
         StarBox.instance_counter+=1

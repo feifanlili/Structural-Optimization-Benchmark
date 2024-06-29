@@ -1,6 +1,6 @@
 import subprocess
 
-def run_radioss(input_file_path, batch_file_path, isShell = False, write_vtk=True, write_csv = True):
+def run_radioss(input_file_path, batch_file_path, isShell = False, write_vtk=False, write_csv = True):
     
     nt = "1"
     np = "1"

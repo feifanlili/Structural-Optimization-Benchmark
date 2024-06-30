@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 from .solver import run_radioss
-from .mesh import StarBoxMesh
-from .fem import StarBoxModel
+from .mesh import *
+from .fem import *
 
 '''
 Remark: following phases are important 
@@ -181,6 +181,7 @@ class ThreePointBending(OptiProblem):
         self.output_file_name = 'ThreePointBendingT01.csv'
 
 class CrashTube(OptiProblem):
+    instance_counter = 1
     def __init__(self, dimension, output_data, batch_file_path) -> None:
         super().__init__(dimension, output_data, batch_file_path)
         # 2 -> three positions and depths vary together with same value. 
@@ -192,9 +193,18 @@ class CrashTube(OptiProblem):
             2: [(-10, 10), (-4, 4)],
             3: [(-4, 4)]*3,
             4: [(-10, 10), (-4, 4), (-10, 10), (-4, 4)],
-            5: [(-4, 4), (-4, 4), (-4, 4), (-10, 10), (-10, 10)],
-            6: [(-4, 4), (-4, 4), (-4, 4), (-10, 10), (-10, 10), (-10, 10)]
+            5: [(-10, 10), (-10, 10), (-10, 10), (-4, 4), (-4, 4)],
+            6: [(-10, 10), (-10, 10), (-10, 10), (-4, 4), (-4, 4), (-4, 4)]
         }
         self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'combine.k'
         self.output_file_name = 'combineT01.csv'
+        self.z_displacement_key = 'DATABASE_HISTORY_NODE1001var63' # the key of the intrusion in the output csv file
+
+        self.problem_id = CrashTube.instance_counter
+        CrashTube.instance_counter+=1
+
+    def _write_input_file(self, fem_space_variable_array):
+        self.mesh = CrashTubeMesh(fem_space_variable_array) 
+        self.model = CrashTubeModel(self.mesh)
+        self.model.write_input_files()

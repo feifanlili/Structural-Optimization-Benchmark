@@ -39,7 +39,7 @@ def get_problem(model_type, dimension, output_data, batch_file_path):
         Specifies the type of output data required. The options are:
         - 'mass'
         - 'absorbed_energy'
-        - 'intrusion' (Requires running a simulation; 'mass' and 'absorbed_energy' do not require FEM simulation.)
+        - 'intrusion' (Requires running FEM simulation while 'mass' and 'absorbed_energy' do not require one.)
 
     batch_file_path : str
         Path to the OpenRadioss batch file.

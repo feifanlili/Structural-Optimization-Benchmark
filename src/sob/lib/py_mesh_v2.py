@@ -314,20 +314,26 @@ def py_mesh_v2(var_file, save=True):
         #             grid = np.append(xy_t, z)
         #             nodes[gid] = grid
         '''
-        Modified trigger maker: New parameters trigger width and trigger depth added
+        Modified trigger generation by Feifan.Li: New parameters of trigger width and trigger depth added
         '''
         if make_triggers:
-            triggers_distance = extrusion_length/4
-            triggers_distance_el = int(round(triggers_distance/elsize))
+            trigger_distance_default = extrusion_length/4
+            trigger_distance_default_el = int(round(trigger_distance_default/elsize))
+            # test variables
+            trigger_depths = np.array([-4, 2, 4])
+            trigger_position_vars = np.array([10, -10, 10])
+            trigger_position_vars_el = np.round(trigger_position_vars / elsize).astype(int)
             if pid in trigger_cells:
                 for j in range(1,4): # three triggers
-                    trigger_nodes = nodes_ids[-triggers_distance_el*j,1:-1]  #!!!!!!!!! changed from -3 to -6
+                    # the trigger position varies based on the default
+                    trigger_position = trigger_distance_default_el*j + trigger_position_vars_el[j-1]
+                    trigger_nodes = nodes_ids[trigger_position,1:-1]  #!!!!!!!!! changed from -3 to -6
                     for i in range(1, trigger_rows):
-                        trigger_nodes = np.append(trigger_nodes, nodes_ids[-triggers_distance_el*j-i,1:-1]) #!!!!!!!!! changed from -3 to -6
+                        trigger_nodes = np.append(trigger_nodes, nodes_ids[trigger_position+i,1:-1]) #!!!!!!!!! changed from -3 to -6
                     for gid in trigger_nodes:
                         xy = nodes[gid][:2]
                         z = nodes[gid][2]
-                        xy_t = xy + trigger_depth*line_perp
+                        xy_t = xy + trigger_depths[j-1]*line_perp
                         grid = np.append(xy_t, z)
                         nodes[gid] = grid
                     

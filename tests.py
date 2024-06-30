@@ -50,3 +50,15 @@ def check_intrusion():
     print("Intrusion 1:"+str(intrusion1))
     print("Intrusion 2:"+str(intrusion2))
 
+def check_crashtube_mesh_generation():
+    # check the parameters added for trigger generation (see py_mesh.input)
+    a = sob.get_problem(3,2,'mass',batch_file_path)
+    a([1,2])
+    b = sob.get_problem(3,3,'mass',batch_file_path)
+    b([1,2,3])
+    c = sob.get_problem(3,4,'mass',batch_file_path)
+    c([1,2,3,4])
+    c = sob.get_problem(3,5,'mass',batch_file_path)
+    c([1,2,3,4,5])
+    d = sob.get_problem(3,6,'mass',batch_file_path)
+    d([1,2,3,4,5,-2])

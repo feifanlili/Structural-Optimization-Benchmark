@@ -17,7 +17,7 @@ def main():
     a([1,2])
     b = sob.get_problem(3,3,'mass',batch_file_path)
     b([1,2,3])
-    c = sob.get_problem(3,4,'mass',batch_file_path)
+    c = sob.get_problem(3,4,'intrusion',batch_file_path)
     c([1,2,3,4])
     c = sob.get_problem(3,5,'mass',batch_file_path)
     c([1,2,3,4,5])

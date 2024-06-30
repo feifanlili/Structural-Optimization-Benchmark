@@ -42,11 +42,13 @@ def py_mesh_v2(var_file, save=True):
 
             if 'id_min' == tmp[0]:
                 variables['id_min'] = int(tmp[1])
-
-            if 'trigger_depth' == tmp[0]:
-                variables['trigger_depth'] = float(tmp[1])
-                make_triggers = True # ??
-
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! newer added, Li
+            if 'trigger_positions' == tmp[0]:
+                variables['trigger_positions'] = np.array(list(map(float, tmp[1:4])))
+                make_triggers = True 
+            if 'trigger_depths' == tmp[0]:
+                variables['trigger_depths'] = np.array(list(map(float, tmp[1:4])))
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if 'trigger_rows' == tmp[0]:
                 variables['trigger_rows'] = int(tmp[1])
 
@@ -109,7 +111,6 @@ def py_mesh_v2(var_file, save=True):
     id_min = variables['id_min']
 
     if make_triggers:
-        trigger_depth = variables['trigger_depth']
         if 'trigger_rows' in variables:
             trigger_rows = variables['trigger_rows']
         else:
@@ -313,15 +314,19 @@ def py_mesh_v2(var_file, save=True):
         #             xy_t = xy + trigger_depth*line_perp
         #             grid = np.append(xy_t, z)
         #             nodes[gid] = grid
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         '''
-        Modified trigger generation by Feifan.Li: New parameters of trigger width and trigger depth added
+        Modified trigger generation: New parameters of trigger width and trigger depth added
         '''
         if make_triggers:
             trigger_distance_default = extrusion_length/4
             trigger_distance_default_el = int(round(trigger_distance_default/elsize))
             # test variables
-            trigger_depths = np.array([-4, 2, 4])
-            trigger_position_vars = np.array([10, -10, 10])
+            # trigger_depths = np.array([-4, 2, 4])
+            # trigger_position_vars = np.array([10, -10, 10])
+            trigger_depths = variables['trigger_depths']
+            trigger_position_vars = variables['trigger_positions']
+            print(trigger_position_vars)
             trigger_position_vars_el = np.round(trigger_position_vars / elsize).astype(int)
             if pid in trigger_cells:
                 for j in range(1,4): # three triggers
@@ -336,7 +341,7 @@ def py_mesh_v2(var_file, save=True):
                         xy_t = xy + trigger_depths[j-1]*line_perp
                         grid = np.append(xy_t, z)
                         nodes[gid] = grid
-                    
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       
         for i in range(len(nodes_ids)-1):
             for j in range(len(nodes_ids[i])-1):
                 n1 = nodes_ids[i  , j  ]

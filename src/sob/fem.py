@@ -406,7 +406,7 @@ class CrashTubeModel(StarBoxModel):
         
         # Define default parameters for load_database
         self.database_defaults = {
-            'end_time': 60.0,
+            'end_time': 50.0,
             'database_dtime': 0.05,
             'consider_d3plot': True, # cons_d3plot
             'd3plot_dtime': 0.5, # d3plot_dtime

@@ -62,3 +62,7 @@ def check_crashtube_mesh_generation():
     c([1,2,3,4,5])
     d = sob.get_problem(3,6,'mass',batch_file_path)
     d([1,2,3,4,5,-2])
+
+def check_crashtube_problem():
+    c = sob.get_problem(3,4,'intrusion',batch_file_path)
+    print(c([1,2,3,4]))

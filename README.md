@@ -4,7 +4,7 @@ This repository contains a structural optimization benchmark project using OpenR
 
 ## Overview
 
-The structural optimization benchmark project aims to provide a framework for implementing and evaluating various optimization algorithms for structural design problems. It includes modules for defining optimization problems, generating finite element meshes, solving optimization problems, and post-processing results.
+The structural optimization benchmark project aims to provide a framework for implementing and evaluating various structural optimization problems. It includes modules for defining optimization problems, generating finite element meshes, solving FE models, and post-processing results.
 
 ## Project Structure
 

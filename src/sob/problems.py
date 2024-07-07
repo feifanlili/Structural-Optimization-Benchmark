@@ -123,7 +123,8 @@ class OptiProblem():
             result = self.model.absorbed_energy()
         elif self.output_data == 'intrusion':
             self.run_simulation()
-            max_z = max(self.output_data_frame[self.z_displacement_key], key=abs)
+            matching_columns = [col for col in self.output_data_frame.columns if self.track_node_key in col]
+            max_z = max(self.output_data_frame[matching_columns[2]], key=abs)
             return abs(max_z)
         else:
             result = None
@@ -150,7 +151,7 @@ class StarBox(OptiProblem):
         self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'combine.k'
         self.output_file_name = 'combineT01.csv'
-        self.z_displacement_key = 'DATABASE_HISTORY_NODE1001var63' # the key of the intrusion in the output csv file
+        self.track_node_key = 'DATABASE_HISTORY_NODE1001' # the key of the intrusion in the output csv file
 
         self.problem_id = StarBox.instance_counter
         StarBox.instance_counter+=1
@@ -199,7 +200,7 @@ class CrashTube(OptiProblem):
         self.variable_ranges = variable_ranges_map[self.dimension]
         self.input_file_name = 'combine.k'
         self.output_file_name = 'combineT01.csv'
-        self.z_displacement_key = 'DATABASE_HISTORY_NODE1001var63' # the key of the intrusion in the output csv file
+        self.track_node_key = 'DATABASE_HISTORY_NODE1001' # the key of the intrusion in the output csv file
 
         self.problem_id = CrashTube.instance_counter
         CrashTube.instance_counter+=1
